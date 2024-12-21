@@ -29,3 +29,7 @@ cin>>q;
 compare(p,q);
 return 0;
 }
+
+
+
+

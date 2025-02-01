@@ -1,61 +1,48 @@
-// AIM - Code and analyze solutions to problem with Knap Sack using dynamic approach
 
-#include <iostream>
+// DAA LAB No.2
+//Code and analyze to find an optimal solution to matrix chain multiplication using dynamic programming.
+
+#include <bits/stdc++.h>
 using namespace std;
 
-struct Item
+#define INF 10000000;
+int matrixchain(int dims[], int n)
 {
-    int profit, weight;
-};
-void KnapSack(int capacity, int n, Item items[])
-{
-    int matrix[n + 1][capacity + 1];
-    for (int i = 0; i <= n; i++)
+    int dp[100][100];
+    for (int i = 1; i < n; i++)
     {
-        for (int w = 0; w <= capacity; w++)
+        dp[i][i] = 0;
+    }
+    for (int len = 2; len < n; len++)
+    {
+        for (int i = 1; i < n - len + 1; i++)
         {
-            if (i == 0 || w == 0)
+            int j = i + len - 1;
+            dp[i][j] = INF;
+            for (int k = i; k < j; k++)
             {
-                matrix[i][w] = 0;
-            }
-            else if (items[i - 1].weight <= w)
-            {
-                matrix[i][w] = max(matrix[i - 1][w], items[i - 1].profit + matrix[i - 1][w - items[i - 1].weight]);
-            }
-            else
-            {
-                matrix[i][w] = matrix[i - 1][w];
+                int cost = dp[i][k] + dp[k + 1][j] + dims[i - 1] * dims[k] * dims[j]; // formula
+                if (cost < dp[i][j])
+                {
+                    dp[i][j] = cost;
+                }
             }
         }
     }
-    cout << "Max Profit : " << matrix[n][capacity] << endl;
-    int w = capacity;
-    cout << "Selected Items for KnapSack : ";
-
-    for (int i = n; i > 0 && w > 0; i--)
-    {
-        if (matrix[i][w] != matrix[i - 1][w])
-        {
-            cout << "item " << i << " ";
-            w -= items[i - 1].weight;
-        }
-    }
-    cout << endl;
-};
+    return dp[1][n - 1];
+}
 
 int main()
 {
-    int n, capacity;
-    cout << "Enter the number of items : ";
+    int n;
+    cout << "Enter no. of martix: ";
     cin >> n;
-    Item items[n];
-    cout << "Enter the Capacity of the KnapSack : ";
-    cin >> capacity;
-    for (int i = 0; i < n; i++)
+    int dims[n + 1];
+    cout << "Enter dimension of matrices(size " << n + 1 << "): ";
+    for (int i = 0; i <= n; i++)
     {
-        cout << "Enter profit and weight for item " << i + 1 << " : ";
-        cin >> items[i].profit >> items[i].weight;
+        cin >> dims[i];
     }
-    KnapSack(capacity, n, items);
+    cout << "min no. of scaller multipliation: " << matrixchain(dims, n + 1) << endl;
     return 0;
 }

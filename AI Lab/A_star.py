@@ -15,7 +15,7 @@ def astar(grid, start, goal):
     while open_set:
         f, cost, current, path = heapq.heappop(open_set)
         if current in visited:
-            continue
+            continue            
         visited.add(current)
         if current == goal:
             return path, cost
